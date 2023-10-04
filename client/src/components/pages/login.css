@@ -1,0 +1,102 @@
+
+ .login{
+  background: linear-gradient(to right, rgb(172, 168, 168), rgb(231, 239, 243)); 
+  padding: 0;
+  height: 100vh; 
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+}
+
+/* Style the login container */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  margin-top: 20px; /* Add some space at the top */
+  padding: 20px; /* Add padding for spacing */
+}
+
+/* Styles for the animated text */
+.animated-text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  margin-top: 20px; /* Add some space at the top */
+  padding: 20px; /* Add padding for spacing */
+}
+
+.animated-text {
+  font-size: 50px;
+  margin-top: 10px; /* Adjust the top margin as needed */
+  display: flex; /* Make the letters appear in a row */
+}
+
+.animated-text span {
+  animation: moveLetter 0.5s ease infinite;
+  margin: 5px; /* Adjust the spacing between letters as needed */
+  display: inline-block;
+  opacity: 0; /* Start with letters hidden */
+  animation-delay: calc(0.1s * var(--index)); /* Delay each letter animation */
+  color: var(--text-color); /* Set the color of the letters */
+}
+
+@keyframes moveLetter {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px); /* Adjust the vertical movement as needed */
+  }
+  0% {
+    opacity: 0; /* Hide letters at the start of the animation */
+  }
+  100% {
+    opacity: 1; /* Show letters at the end of the animation */
+  }
+}
+
+/* Style the login form */
+.login-page {
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for the login form */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(233, 209, 209, 0.5); /* Add a subtle shadow */
+  width: 300px;
+  margin: 0 auto; /* Center the login form horizontally */
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  align-items: center; /* Center content horizontally */
+}
+
+.input-container {
+  margin-bottom: 20px;
+  margin-right: 50px;
+  margin-left: 20px;
+
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 20px;
+  border: 5px;
+  border-radius: 10px;
+  outline: 1px;
+  
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ce3b3b;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #cf8285;
+}
