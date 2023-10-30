@@ -1,21 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
-import './login.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Link,
+} from "@material-ui/core";
+
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
-
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState("");
   const navigate = useNavigate();
 
-  const handleEmailChange = (e) => {
+  const handleEmailChange = e => {
     setEmail(e.target.value);
   };
 
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = e => {
     setPassword(e.target.value);
   };
 
@@ -26,10 +33,10 @@ function Login() {
     };
 
     try {
-      const response = await fetch('http://localhost:4000/api/v1/users/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:4000/api/v1/users/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
@@ -38,80 +45,107 @@ function Login() {
         const result = await response.json();
         setToken(result.token);
 
-        // Store the token in localStorage
-        localStorage.setItem('token', result.token);
+        localStorage.setItem("token", result.token);
+        localStorage.setItem("role", result.role);
 
-        navigate('/home');
+        if (result.role === "admin") {
+          window.location.href = "/home";
+        } else {
+          localStorage.setItem("userId", result.userId);
+          window.location.href = "/Contacts";
+        }
       } else {
-        setError('Invalid email or password');
+        setError("Invalid email or password");
       }
     } catch (error) {
-      console.error('Error occurred during login:', error);
-      setError('Failed to log in. Please try again later.');
+      console.error("Error occurred during login:", error);
+      setError("Failed to log in. Please try again later.");
     }
   };
 
   useEffect(() => {
     setError(null);
 
-    // Check token expiration when the component mounts
     if (token) {
       const decodedToken = jwtDecode(token);
-      const currentTime = Date.now() / 1000; // Convert milliseconds to seconds
+      const currentTime = Date.now() / 1000;
 
-      // Check if the token has expired
       if (decodedToken.exp < currentTime) {
-        setToken('');
-        navigate('/');
+        setToken("");
+        navigate("/");
       }
     }
   }, [token, navigate]);
 
- 
-    return (
-      <div className="login">
-      <div className="login-container">
-        <div className="animated-text-container">
-    <div className="animated-text">
-      <span style={{ '--index': 1 }}>J</span>
-      <span style={{ '--index': 2 }}>o</span>
-      <span style={{ '--index': 3 }}>i</span>
-      <span style={{ '--index': 4 }}>n</span>
-      <span style={{ '--index': 5 }}>i</span>
-      <span style={{ '--index': 6 }}>n</span>
-      <span style={{ '--index': 7 }}>g</span>
-      <span style={{ '--index': 8 }}>E</span>
-      <span style={{ '--index': 9 }}>n</span>
-      <span style={{ '--index': 10 }}>d</span>
-      <span style={{ '--index': 11 }}>s</span>
-    </div>
-  </div>
-  
-  
-        {/* Login Form Container */}
-        <div className="login-page">
-          <h2>Login</h2>
-          <div className="input-container">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={handleEmailChange}
-            />
-          </div>
-          <div className="input-container">
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={handlePasswordChange}
-            />
-          </div>
-          <button onClick={handleLogin}>Login</button>
-        </div>
-      </div>
-      </div>
-    );
-  }
-  
-  export default Login;
+  return (
+    <Container
+      component="main"
+      maxWidth="xs"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+      }}
+    >
+      <Typography
+        component="h1"
+        variant="h2"
+        style={{ color: "#FF0000", fontSize: "2rem", animation: "fadeIn 2s" }}
+      >
+        JoiningEnds
+      </Typography>
+      <Paper elevation={3} style={{ padding: "24px", width: "100%" }}>
+        <Typography component="h1" variant="h5">
+          Login
+        </Typography>
+        <form>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            label="Email"
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            label="Password"
+            type="password"
+            value={password}
+            onChange={handlePasswordChange}
+          />
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            color="primary"
+            style={{ margin: "16px 0" }}
+            onClick={handleLogin}
+          >
+            Login
+          </Button>
+        </form>
+        <Typography>
+          Don't have an account?{" "}
+          <Link
+            component={Button}
+            variant="outlined"
+            color="primary"
+            onClick={() => navigate("/register")}
+          >
+            Register
+          </Link>
+        </Typography>
+      </Paper>
+    </Container>
+  );
+}
+
+export default Login;
