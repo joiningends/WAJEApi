@@ -5,7 +5,7 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv/config");
-
+const path = require("path");
 
 app.use(cors());
 app.options("*", cors());
@@ -26,6 +26,18 @@ app.use(`${api}/users`, usersRoutes);
 app.use(`${api}/wa`, waRoutes);
 app.use(`${api}/sections`, sectionsRoutes);
 app.use(`${api}/numbers`, numbersRoutes);
+
+const _dirname = path.dirname("");
+const buildPath = path.join(__dirname, "../client/build");
+app.use(express.static(buildPath));
+app.get("/*", (_, res) => {
+  res.sendFile(path.join(buildPath, "index.html")),
+    function (err) {
+      if (err) {
+        res.status(500).send(err);
+      }
+    };
+});
 mongoose.connect(process.env.CONNECTION_STRING,{
   useNewUrlParser:true,
   useUnifiedTopology: true,
